@@ -9,6 +9,7 @@ import remark2react from 'remark-react';
 const StyledButton = styled.button`
 	text-align: center;
 	cursor: pointer;
+	margin: 1rem;
 `;
 
 export const Card = ({ question, children, show }) => {
@@ -50,7 +51,8 @@ class CardSystem extends React.PureComponent {
 	handleNext = () => {
 		if (this.state.current + 1 < this.state.cards.length) {
 			this.setState({
-				current: this.state.current + 1
+				current: this.state.current + 1,
+				show: false
 			});
 		}
 	};
@@ -69,50 +71,71 @@ class CardSystem extends React.PureComponent {
 		);
 
 		return (
-			<div>
+			<div style={{ textAlign: 'center' }}>
+				<span sx={{ fontFamily: 'Open Sans', fontSize: 4, fontVariant: 'all-small-caps' }}>
+					Card {this.state.current + 1} out of {this.state.cards.length}
+				</span>
 				{childrenWithProps[this.state.current]}
-				<StyledButton
+				<div
 					sx={{
-						padding: 3,
-						backgroundColor: 'text',
-						color: 'background',
-						boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
-						border: (theme) => `1px solid ${theme.colors.primary}`,
-						borderRadius: 2,
-						fontFamily: 'subtitle'
+						display: 'flex',
+						flexDirection: 'row',
+						position: 'fixed',
+						bottom: '50px',
+						left: 0,
+						right: 0,
+						margin: '0 auto',
+						justifyContent: 'center'
 					}}
-					onClick={() => this.handleShow()}
 				>
-					Show Answer/Hide Answer
-				</StyledButton>
-				<StyledButton
-					sx={{
-						padding: 3,
-						backgroundColor: 'text',
-						color: 'background',
-						boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
-						border: (theme) => `1px solid ${theme.colors.primary}`,
-						borderRadius: 2,
-						fontFamily: 'subtitle'
-					}}
-					onClick={() => this.handlePrev()}
-				>
-					Prev
-				</StyledButton>
-				<StyledButton
-					sx={{
-						padding: 3,
-						backgroundColor: 'text',
-						color: 'background',
-						boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
-						border: (theme) => `1px solid ${theme.colors.primary}`,
-						borderRadius: 2,
-						fontFamily: 'subtitle'
-					}}
-					onClick={() => this.handleNext()}
-				>
-					Next
-				</StyledButton>
+					{this.state.show && (
+						<StyledButton
+							sx={{
+								padding: 3,
+								backgroundColor: 'text',
+								color: 'background',
+								boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
+								border: (theme) => `1px solid ${theme.colors.primary}`,
+								borderRadius: 2,
+								fontFamily: 'subtitle'
+							}}
+							onClick={() => this.handlePrev()}
+						>
+							Prev
+						</StyledButton>
+					)}
+					<StyledButton
+						sx={{
+							padding: 3,
+							backgroundColor: 'text',
+							color: 'background',
+							boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
+							border: (theme) => `1px solid ${theme.colors.primary}`,
+							borderRadius: 2,
+							fontFamily: 'subtitle'
+						}}
+						onClick={() => this.handleShow()}
+					>
+						{this.state.show ? 'Hide Answer' : 'Show Answer'}
+					</StyledButton>
+
+					{this.state.show && (
+						<StyledButton
+							sx={{
+								padding: 3,
+								backgroundColor: 'text',
+								color: 'background',
+								boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
+								border: (theme) => `1px solid ${theme.colors.primary}`,
+								borderRadius: 2,
+								fontFamily: 'subtitle'
+							}}
+							onClick={() => this.handleNext()}
+						>
+							Next
+						</StyledButton>
+					)}
+				</div>
 			</div>
 		);
 	}
