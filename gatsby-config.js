@@ -1,5 +1,6 @@
 const path = require(`path`);
 
+// Default Option
 const options = {
 	contentPath: 'books',
 	books: [
