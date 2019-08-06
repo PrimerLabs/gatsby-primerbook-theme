@@ -2,7 +2,7 @@ export const theme = {
 	breakpoints: [ '48em', '64em', '100em' ],
 	space: [ 0, 4, 8, 16, 20, 32, 60 ],
 	fonts: {
-		body: 'Crimson Text; serif',
+		body: 'Quicksand; sans-serif',
 		title: 'Open Sans; sans-serif',
 		subtitle: 'Quicksand'
 	},
@@ -25,14 +25,24 @@ export const theme = {
 		primary: 'black',
 		modes: {
 			dark: {
-				text: '#fff',
-				background: '#000',
-				primary: '#0cf'
+				text: '#659B5E',
+				background: '#1E2019',
+				primary: '#659B5E'
 			},
 			light: {
 				text: '#333',
 				background: '#fff',
-				primary: 'black'
+				primary: '#333'
+			},
+			weed: {
+				text: '#0A122A',
+				background: '#399E5A',
+				primary: '#0A122A'
+			},
+			drizzle: {
+				text: '#FCF7F8',
+				background: '#26547C',
+				primary: '#FCF7F8'
 			}
 		}
 	},

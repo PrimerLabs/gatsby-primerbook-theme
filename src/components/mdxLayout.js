@@ -3,19 +3,7 @@ import { ModalProvider } from './Modal/Modal';
 import styled from '@emotion/styled';
 import 'katex/dist/katex.min.css';
 
-export default ({ children }) => (
-	<ModalProvider>
-		<Content
-			className="MdxLayout"
-			style={{
-				// Layout styling
-				margin: `10%`
-			}}
-		>
-			{children}
-		</Content>
-	</ModalProvider>
-);
+export default ({ children }) => <ModalProvider>{children}</ModalProvider>;
 
 const Content = styled(`div`)`
 

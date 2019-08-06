@@ -2,7 +2,102 @@
 import { jsx } from 'theme-ui';
 import styled from '@emotion/styled';
 import faker from 'faker';
+import { Link as UnStyledLink } from 'gatsby';
 import { useColorMode } from 'theme-ui';
+import { FiSun, FiCloudDrizzle, FiDroplet, FiMoon } from 'react-icons/fi';
+import { FaCannabis } from 'react-icons/fa';
+import { useState } from 'react';
+
+export const Content = ({ children }) => <StyledContent style={{ margin: `5%` }}>{children}</StyledContent>;
+
+export const ChapterNumber = ({ children }) => (
+	<span
+		sx={{
+			fontFamily: 'body',
+			fontVariant: 'all-small-caps',
+			fontWeight: '100',
+			fontSize: 4
+		}}
+	>
+		{children}
+	</span>
+);
+
+const StyledContent = styled(`div`)`
+  .gatsby-highlight {
+    max-height: 30rem;
+    overflow-y: auto;
+    border-radius: 0.2rem;
+    margin: 3rem 0;
+
+    pre {
+      margin: 0;
+      padding: 1rem 1.5rem;
+    }
+
+    /* width */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #222;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: #666;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #999;
+    }
+  }
+`;
+
+export const Link = (props) => (
+	<UnStyledLink style={{ textDecoration: 'none' }} {...props}>
+		{props.children}
+	</UnStyledLink>
+);
+
+export const SidebarLink = (props) => (
+	<UnStyledLink sx={{ textDecoration: 'none!important', color: 'background' }} {...props}>
+		{props.children}
+	</UnStyledLink>
+);
+
+export const Section = ({ children }) => (
+	<h3
+		sx={{
+			fontFamily: 'title',
+			fontVariant: 'all-small-caps',
+			textDecoration: 'none',
+			fontSize: '3rem',
+			letterSpacing: '1px'
+		}}
+	>
+		{children}
+	</h3>
+);
+
+export const TableOfContent = ({ children }) => (
+	<div sx={{ width: [ '100%', '100%', '85%' ], padding: '20px' }}>{children}</div>
+);
+
+export const TableOfContentSectionList = ({ children, colNumber }) => (
+	<ol
+		sx={{
+			paddingLeft: [ 1, 2, 4 ],
+			columnCount: [ 1, 2, 2 ],
+			fontFamily: 'Quicksand'
+		}}
+	>
+		{children}
+	</ol>
+);
 
 export const GlossaryList = ({ children }) => (
 	<div sx={{ padding: 5, paddingTop: 0 }}>
@@ -96,17 +191,53 @@ export const IconButton = (props) => (
 	</button>
 );
 
+const ButtonIcon = styled(`button`)`
+ 
+  top: ${(props) => (props.top ? props.top : '20px')};
+   opacity: 0.5;
+  transition: opacity 0.5s;
+  cursor: pointer;
+
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  :hover {
+    opacity: 1;
+
+    svg {
+      color: #ffffff;
+    }
+  }
+`;
+
 export const ThemeButton = (props) => {
 	const [ colorMode, setColorMode ] = useColorMode();
 	return (
 		<header>
-			<button
-				onClick={(e) => {
-					setColorMode(colorMode === 'light' ? 'dark' : 'light');
-				}}
-			>
-				Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
-			</button>
+			<div style={{ display: 'flex', justifyContent: 'space-between', width: '200px', margin: 'auto' }}>
+				<FiSun
+					sx={{ opacity: colorMode === 'light' ? '1' : '0.5' }}
+					className="ThemeIcon"
+					onClick={(e) => setColorMode('light')}
+				/>
+				<FiCloudDrizzle
+					onClick={(e) => setColorMode('drizzle')}
+					sx={{ opacity: colorMode === 'drizzle' ? '1' : '0.5' }}
+					className="ThemeIcon"
+				/>
+				<FaCannabis
+					onClick={(e) => setColorMode('weed')}
+					sx={{ opacity: colorMode === 'weed' ? '1' : '0.5' }}
+					className="ThemeIcon"
+				/>
+				<FiMoon
+					sx={{ opacity: colorMode === 'dark' ? '1' : '0.5' }}
+					className="ThemeIcon"
+					onClick={(e) => setColorMode('dark')}
+				/>
+			</div>
 		</header>
 	);
 };
@@ -203,15 +334,15 @@ export const Button = ({ children }) => (
 	</button>
 );
 
-export const TopicListItem = ({ listItem, selected }) => (
+export const TopicListItem = ({ topic, selected }) => (
 	<li
 		sx={{
 			cursor: 'pointer',
-			textDecoration: selected === listItem ? 'underline' : 'none',
-			fontWeight: selected === listItem ? 'bolder' : 'normal'
+			textDecoration: selected ? 'underline' : 'none',
+			fontWeight: selected ? 'bolder' : 'normal'
 		}}
-		key={listItem}
+		key={topic.id}
 	>
-		{faker.lorem.words()}
+		<Link to={topic.path}>{topic.title}</Link>
 	</li>
 );

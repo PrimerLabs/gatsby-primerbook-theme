@@ -16,6 +16,11 @@
 	--type-xxxx-large: 400%;
 }
 
+.anchor-link {
+	margin-left: -30px !important;
+	padding-right: 6px !important;
+}
+
 .Sidebar {
 	height: 100vh;
 	position: fixed;
@@ -24,6 +29,17 @@
 	flex-direction: column;
 	justify-content: space-around;
 	padding: 16px;
+}
+
+.ThemeIcon {
+	transition: transform 0.5s, opacity 0.5s;
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.ThemeIcon:hover {
+	opacity: 1;
+	transform: scale(1.2);
 }
 
 @media (min-width: 50em) {
@@ -71,7 +87,7 @@ html {
 body {
 	margin: 0;
 	padding: 0;
-	font-family: 'Crimson Text', serif;
+	font-family: 'Quicksand', sans-serif;
 	font-size: var(--type-base);
 	color: rgb(var(--color-text));
 	background-color: rgb(var(--color-background));

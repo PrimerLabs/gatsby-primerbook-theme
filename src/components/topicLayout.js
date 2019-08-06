@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layout as ThemeLayout, Main } from 'theme-ui';
+import { ModalProvider } from './Modal/Modal';
 import faker from 'faker';
 import { Link } from 'gatsby';
 import { IconContext } from 'react-icons';
@@ -12,7 +13,9 @@ import {
 	Button,
 	Divider,
 	IconButton,
-	Container
+	Container,
+	SidebarLink,
+	ChapterNumber
 } from './styles/styles';
 import { FiMenu, FiX } from 'react-icons/fi';
 const SidebarLinkStyle = {
@@ -20,62 +23,122 @@ const SidebarLinkStyle = {
 	fontFamily: 'Crimson Text ; serif'
 };
 
-const TopicLayout = ({ children }) => {
+const TopicLayout = ({
+	children,
+	topics,
+	chapterTitle,
+	chapterPath,
+	chapterNumber,
+	bookPath,
+	solo,
+	colNumber,
+	next
+}) => {
 	const [ open, handleOpen ] = useState(true);
-	return (
-		<ThemeLayout>
-			<IconContext.Provider value={{ size: '1.3em' }}>
-				<Main>
-					<div>
-						<IconButton
-							handleClick={() => {
-								if (open) {
-									handleOpen(false);
-								} else {
-									handleOpen(true);
-								}
-							}}
-						>
-							{open ? <FiX /> : <FiMenu />}
-						</IconButton>{' '}
-					</div>
-					<Sidebar visible={open}>
-						{
-							<React.Fragment>
-								<Link to="/" style={SidebarLinkStyle}>
-									Back to Home
-								</Link>
-								<div
-									style={{
-										textAlign: 'left'
+	if (solo) {
+		return (
+			<ThemeLayout>
+				<ModalProvider>
+					<IconContext.Provider value={{ size: '1.3em' }}>
+						<Main>
+							<div>
+								<IconButton
+									handleClick={() => {
+										if (open) {
+											handleOpen(false);
+										} else {
+											handleOpen(true);
+										}
 									}}
 								>
-									<span
+									{open ? <FiX /> : <FiMenu />}
+								</IconButton>{' '}
+							</div>
+							<Sidebar visible={open}>
+								{
+									<React.Fragment>
+										<Link to={bookPath} style={SidebarLinkStyle}>
+											Back to Home
+										</Link>
+										<div
+											style={{
+												textAlign: 'left'
+											}}
+										>
+											<ChapterTitle>{chapterTitle}</ChapterTitle>
+										</div>
+										{next !== null ? next.type === 'CHAPTER_PAGE' ? (
+											<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
+										) : (
+											<SidebarLink to={next.path}>Next : {next.title}</SidebarLink>
+										) : (
+											<p />
+										)}
+									</React.Fragment>
+								}
+							</Sidebar>
+							<Divider />
+							<Container expand={!open}>{children}</Container>
+						</Main>
+					</IconContext.Provider>
+				</ModalProvider>
+			</ThemeLayout>
+		);
+	}
+	return (
+		<ThemeLayout>
+			<ModalProvider>
+				<IconContext.Provider value={{ size: '1.3em' }}>
+					<Main>
+						<div>
+							<IconButton
+								handleClick={() => {
+									if (open) {
+										handleOpen(false);
+									} else {
+										handleOpen(true);
+									}
+								}}
+							>
+								{open ? <FiX /> : <FiMenu />}
+							</IconButton>{' '}
+						</div>
+						<Sidebar visible={open}>
+							{
+								<React.Fragment>
+									<Link to={bookPath} style={SidebarLinkStyle}>
+										Back to Home
+									</Link>
+									<div
 										style={{
-											fontFamily: 'Quicksand',
-											fontVariant: 'all-small-caps',
-											fontWeight: '100'
+											textAlign: 'left'
 										}}
 									>
-										Chapter 1
-									</span>
-									<ChapterTitle>Introduction</ChapterTitle>
-									<SidebarTopicList columns={2}>
-										{[ 1, 2, 3, 4, 5, 6, 7, 8, 9 ].map((elem) => (
-											<TopicListItem key={elem} listItem={elem} selected={4} />
-										))}
-									</SidebarTopicList>
-								</div>
-								<SidebarBottomButton>
-									<Button>Next: {faker.lorem.words()} </Button>
-								</SidebarBottomButton>
-							</React.Fragment>
-						}
-					</Sidebar>
-					<Divider />
-					<Container expand={!open}>{children}</Container>
-				</Main>
-			</IconContext.Provider>
+										<ChapterNumber>
+											<Link style={{ textDecoration: 'none' }} to={chapterPath}>
+												Chapter {chapterNumber}
+											</Link>
+										</ChapterNumber>
+										<ChapterTitle>{chapterTitle}</ChapterTitle>
+										<SidebarTopicList columns={colNumber}>
+											{topics.map((topic) => <TopicListItem key={topic.id} topic={topic} />)}
+										</SidebarTopicList>
+									</div>
+									{next !== null ? next.type === 'CHAPTER_PAGE' ? (
+										<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
+									) : (
+										<SidebarLink to={next.path}>Next : {next.title}</SidebarLink>
+									) : (
+										<p />
+									)}
+								</React.Fragment>
+							}
+						</Sidebar>
+						<Divider />
+						<Container expand={!open}>{children}</Container>
+					</Main>
+				</IconContext.Provider>
+			</ModalProvider>
 		</ThemeLayout>
 	);
 };
