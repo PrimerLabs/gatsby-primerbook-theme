@@ -13,8 +13,6 @@ const Link = (props) => (
 );
 
 const FrontPage = ({ data, ...rest }) => {
-	console.log(data);
-	console.log(rest);
 	const book = data.book;
 	const topPages = book.pages.filter((page) => page.top === true).sort((a, b) => a.serial - b.serial);
 	const bottomPages = book.pages.filter((page) => page.top !== true).sort((a, b) => a.serial - b.serial);

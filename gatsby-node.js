@@ -496,11 +496,9 @@ exports.createResolvers = ({ createResolvers, schema }) => {
 						id: source.parent
 					});
 					const resolver = type.getFields()['body'].resolve;
-					console.log(resolver);
 					const result = resolver(mdxNode, {}, context, {
 						fieldName: 'body'
 					});
-					console.log(result);
 					return result;
 				}
 			}
@@ -536,7 +534,6 @@ exports.sourceNodes = ({ actions, createNodeId, reporter, createContentDigest },
 
 		const node = { ...bookData, ...nodeMeta };
 		createNode(node);
-		console.log(id);
 		reporter.info(`Created Book node for ${book.name}`);
 	});
 };
@@ -554,7 +551,6 @@ exports.onCreateNode = ({ node, actions, getNode, reporter, createNodeId, create
 	const bookSlugs = books.map((book) => book.slug);
 	if (_.get(node, 'internal.type') === `Mdx` && fileNode.sourceInstanceName === 'books') {
 		const details = getPageDetail(fileNode, bookSlugs);
-		// console.log(details, fileNode.relativePath);
 		if (PAGE_ARRAY.includes(details.type)) {
 			createNodeField({
 				node,

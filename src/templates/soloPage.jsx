@@ -6,7 +6,6 @@ import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { Section, TableOfContent, TableOfContentSectionList, Content } from '../components/styles/styles';
 
 const SoloPage = ({ data }) => {
-	console.log(data);
 	const tableOfContent = data.soloPage.book.getTableOfContent;
 	const currentIndex = tableOfContent.findIndex((node) => node.id === data.soloPage.id);
 	const nextIndex =
