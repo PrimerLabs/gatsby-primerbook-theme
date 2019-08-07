@@ -27,12 +27,6 @@ module.exports = {
 		{
 			resolve: 'gatsby-source-filesystem',
 			options: {
-				path: 'src/pages'
-			}
-		},
-		{
-			resolve: 'gatsby-source-filesystem',
-			options: {
 				path: 'content'
 			}
 		},
@@ -70,12 +64,7 @@ module.exports = {
 				remarkPlugins: [ require('remark-math'), require('remark-html-katex') ]
 			}
 		},
-		{
-			resolve: `gatsby-plugin-page-creator`,
-			options: {
-				path: path.join(__dirname, `src/pages`)
-			}
-		},
+
 		{
 			resolve: `gatsby-plugin-prefetch-google-fonts`,
 			options: {

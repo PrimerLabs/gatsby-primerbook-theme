@@ -80,7 +80,16 @@ const TopicLayout = ({
 								}
 							</Sidebar>
 							<Divider />
-							<Container expand={!open}>{children}</Container>
+							<Container expand={!open}>
+								{children}
+								{next !== null ? next.type === 'CHAPTER_PAGE' ? (
+									<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
+								) : (
+									<SidebarLink to={next.path}>Next : {next.title}</SidebarLink>
+								) : (
+									<p />
+								)}
+							</Container>
 						</Main>
 					</IconContext.Provider>
 				</ModalProvider>
@@ -144,7 +153,16 @@ const TopicLayout = ({
 							}
 						</Sidebar>
 						<Divider />
-						<Container expand={!open}>{children}</Container>
+						<Container expand={!open}>
+							{children}
+							{next !== null ? next.type === 'CHAPTER_PAGE' ? (
+								<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
+							) : (
+								<SidebarLink to={next.path}>Next : {next.title}</SidebarLink>
+							) : (
+								<p />
+							)}
+						</Container>
 					</Main>
 				</IconContext.Provider>
 			</ModalProvider>
