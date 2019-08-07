@@ -92,10 +92,10 @@ class CardSystem extends React.PureComponent {
 						<StyledButton
 							sx={{
 								padding: 3,
-								backgroundColor: 'text',
-								color: 'background',
-								boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
-								border: (theme) => `1px solid ${theme.colors.primary}`,
+								backgroundColor: 'background',
+								color: 'text',
+								boxShadow: (theme) => `0 0 4px ${theme.colors.text}`,
+								border: (theme) => `1px solid ${theme.colors.text}`,
 								borderRadius: 2,
 								fontFamily: 'subtitle'
 							}}
@@ -107,10 +107,10 @@ class CardSystem extends React.PureComponent {
 					<StyledButton
 						sx={{
 							padding: 3,
-							backgroundColor: 'text',
-							color: 'background',
-							boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
-							border: (theme) => `1px solid ${theme.colors.primary}`,
+							backgroundColor: 'background',
+							color: 'text',
+							boxShadow: (theme) => `0 0 4px ${theme.colors.text}`,
+							border: (theme) => `1px solid ${theme.colors.text}`,
 							borderRadius: 2,
 							fontFamily: 'subtitle'
 						}}
@@ -123,10 +123,10 @@ class CardSystem extends React.PureComponent {
 						<StyledButton
 							sx={{
 								padding: 3,
-								backgroundColor: 'text',
-								color: 'background',
-								boxShadow: (theme) => `0 0 4px ${theme.colors.primary}`,
-								border: (theme) => `1px solid ${theme.colors.primary}`,
+								backgroundColor: 'background',
+								color: 'text',
+								boxShadow: (theme) => `0 0 4px ${theme.colors.text}`,
+								border: (theme) => `1px solid ${theme.colors.text}`,
 								borderRadius: 2,
 								fontFamily: 'subtitle'
 							}}

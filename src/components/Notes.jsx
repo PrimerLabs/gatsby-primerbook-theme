@@ -5,11 +5,11 @@ import styled from '@emotion/styled';
 import { ModalContext } from './Modal/Modal';
 import DefaultModal from './defaultModal.mdx';
 
+// float: ${(props) => (props.float === 'left' ? 'left' : 'right')};
 const Container = styled(`div`)`
-  width: 50%;
+ 
   padding-bottom: 1rem;
-  float: ${(props) => (props.float === 'left' ? 'left' : 'right')};
-  margin: ${(props) => (props.float === 'left' ? '0.5rem 3rem 2rem 0' : '0.5rem 0 2rem 3rem')};
+ 
   transition: all 0.5s;
   position: relative;
   display: block;
@@ -75,13 +75,23 @@ export const Side = ({
 	const originRef = useRef(null);
 	const Box = SideNote;
 	return (
-		<Container float={float}>
+		<Container
+			sx={{
+				width: [ '100%', '100%', '50%' ],
+				float: float === 'left' ? [ 'none', 'none', 'left' ] : [ 'none', 'none', 'right' ],
+				margin:
+					float === 'left'
+						? [ '0.5rem', '0.5rem', '0.5rem 3rem 2rem 0' ]
+						: [ '0.5rem', '0.5rem', '0.5rem 0 2rem 3rem' ]
+			}}
+			float={float}
+		>
 			<Box
 				modal={modal}
 				ref={originRef}
 				sx={{
-					backgroundColor: backgroundColor,
-					color: textColor,
+					backgroundColor: 'modal',
+					color: 'modalText',
 					fontSize: large ? '3rem' : 'inherit'
 				}}
 				onClick={() => {
@@ -127,8 +137,8 @@ export const Full = ({
 				ref={originRef}
 				float={float}
 				sx={{
-					backgroundColor: backgroundColor,
-					color: textColor,
+					backgroundColor: 'modal',
+					color: 'modalText',
 					fontSize: large ? '3rem' : 'inherit'
 				}}
 				onClick={() => {
@@ -176,8 +186,8 @@ export const FlashCards = ({
 }) => {
 	const { showModal } = useContext(ModalContext);
 	const { colorMode, theme } = useThemeUI();
-	const backgroundColor = nocolor ? theme['colors']['modes'][colorMode]['background'] : background;
-	const textColor = nocolor ? theme['colors']['modes'][colorMode]['primary'] : text;
+	const backgroundColor = nocolor ? theme['colors']['modes'][colorMode]['modal'] : background;
+	const textColor = nocolor ? theme['colors']['modes'][colorMode]['modalText'] : text;
 	const originRef = useRef(null);
 	const Box = Cards;
 	return (

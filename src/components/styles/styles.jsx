@@ -7,6 +7,7 @@ import { useColorMode } from 'theme-ui';
 import { FiSun, FiCloudDrizzle, FiDroplet, FiMoon } from 'react-icons/fi';
 import { FaCannabis } from 'react-icons/fa';
 import { useState } from 'react';
+import { Location } from '@reach/router';
 
 export const Content = ({ children }) => <StyledContent style={{ margin: `5%` }}>{children}</StyledContent>;
 
@@ -92,7 +93,7 @@ export const TableOfContentSectionList = ({ children, colNumber }) => (
 		sx={{
 			paddingLeft: [ 1, 2, 4 ],
 			columnCount: [ 1, 2, 2 ],
-			fontFamily: 'Quicksand'
+			fontFamily: 'body'
 		}}
 	>
 		{children}
@@ -304,7 +305,9 @@ export const SidebarTopicList = (props) => (
 			paddingLeft: 4,
 			columnCount: [ 2, 2, `${props.columns}` ],
 			fontFamily: 'body',
-			listStylePosition: 'inside'
+			listStylePosition: 'inside',
+			fontVariant: 'all-small-caps',
+			fontSize: 4
 		}}
 	>
 		{props.children}
@@ -334,15 +337,29 @@ export const Button = ({ children }) => (
 	</button>
 );
 
-export const TopicListItem = ({ topic, selected }) => (
-	<li
-		sx={{
-			cursor: 'pointer',
-			textDecoration: selected ? 'underline' : 'none',
-			fontWeight: selected ? 'bolder' : 'normal'
-		}}
-		key={topic.id}
-	>
-		<Link to={topic.path}>{topic.title}</Link>
-	</li>
-);
+export const TopicListItem = ({ topic }) => {
+	return (
+		<Location>
+			{({ location }) => {
+				const { pathname } = location;
+				const selected = pathname === topic.path;
+				console.log(topic.path);
+				return (
+					<li
+						sx={{
+							cursor: 'pointer',
+
+							fontWeight: selected ? 'bolder' : 'normal',
+							opacity: selected ? '1' : '0.5'
+						}}
+						key={topic.id}
+					>
+						<Link to={topic.path}>{topic.title}</Link>
+					</li>
+				);
+			}}
+		</Location>
+	);
+};
+
+// textDecoration: selected ? 'underline' : 'none',

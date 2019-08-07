@@ -1,5 +1,5 @@
 export const theme = {
-	breakpoints: [ '48em', '64em', '100em' ],
+	breakpoints: [ '48em', '64em', '120em' ],
 	space: [ 0, 4, 8, 16, 20, 32, 60 ],
 	fonts: {
 		body: 'Quicksand; sans-serif',
@@ -27,22 +27,30 @@ export const theme = {
 			dark: {
 				text: '#659B5E',
 				background: '#1E2019',
-				primary: '#659B5E'
+				primary: '#659B5E',
+				modal: '#659B5E',
+				modalText: '#1E2019'
 			},
 			light: {
 				text: '#333',
-				background: '#fff',
-				primary: '#333'
+				background: '#FCF7F8',
+				primary: '#333',
+				modal: '#333',
+				modalText: '#FCF7F8'
 			},
 			weed: {
 				text: '#0A122A',
 				background: '#399E5A',
-				primary: '#0A122A'
+				primary: '#0A122A',
+				modal: '#0A122A',
+				modalText: '#399E5A'
 			},
 			drizzle: {
 				text: '#FCF7F8',
 				background: '#26547C',
-				primary: '#FCF7F8'
+				primary: '#FCF7F8',
+				modal: '#FCF7F8',
+				modalText: '#26547C'
 			}
 		}
 	},

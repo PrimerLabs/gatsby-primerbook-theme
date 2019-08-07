@@ -18,8 +18,8 @@ const Layout = ({ children }) => {
 							<BookTitle>MACHINE LEARNING & REGRESSION</BookTitle>
 							<BookSubTitle> Teaching machines to think like humans </BookSubTitle>
 							<BookAuthor>Primerlabs</BookAuthor>
-							<ThemeButton />
 						</div>
+						<ThemeButton />
 					</Sidebar>
 					<Divider />
 

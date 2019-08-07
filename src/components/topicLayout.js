@@ -32,9 +32,11 @@ const TopicLayout = ({
 	bookPath,
 	solo,
 	colNumber,
-	next
+	next,
+	...rest
 }) => {
 	const [ open, handleOpen ] = useState(true);
+	console.log(rest);
 	if (solo) {
 		return (
 			<ThemeLayout>
@@ -121,7 +123,14 @@ const TopicLayout = ({
 										</ChapterNumber>
 										<ChapterTitle>{chapterTitle}</ChapterTitle>
 										<SidebarTopicList columns={colNumber}>
-											{topics.map((topic) => <TopicListItem key={topic.id} topic={topic} />)}
+											{topics.map((topic) => (
+												<TopicListItem
+													key={topic.id}
+													topic={topic}
+													bookPath={bookPath}
+													chapterPath={chapterPath}
+												/>
+											))}
 										</SidebarTopicList>
 									</div>
 									{next !== null ? next.type === 'CHAPTER_PAGE' ? (
