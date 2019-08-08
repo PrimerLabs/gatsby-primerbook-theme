@@ -65,7 +65,7 @@ export const Link = (props) => (
 );
 
 export const SidebarLink = (props) => (
-	<UnStyledLink sx={{ textDecoration: 'none!important', color: 'background' }} {...props}>
+	<UnStyledLink sx={{ textDecoration: 'none!important', color: 'background', marginTop: '6' }} {...props}>
 		{props.children}
 	</UnStyledLink>
 );
@@ -158,10 +158,9 @@ export const Sidebar = (props) => (
 			],
 			display: [ 'flex', 'flex', `${!props.visible ? 'flex' : 'flex'}` ],
 			flexDirection: 'column',
-			justifyContent: 'space-around',
 			padding: 4,
 			paddingTop: [ 4, 4, 6 ],
-			height: '100vh',
+			height: '100%',
 			color: 'primary',
 			transition: [ '1s', '1s', `transform 1s, opacity 1s, width 0s linear ${!props.visible ? '2s' : '0s'}` ],
 			overflowY: 'auto',
@@ -213,10 +212,36 @@ const ButtonIcon = styled(`button`)`
   }
 `;
 
+export const MainTitle = ({ children }) => {
+	return (
+		<div
+			sx={{
+				textAlign: 'right',
+				paddingTop: '30%'
+			}}
+		>
+			{children}
+		</div>
+	);
+};
+
+export const TopicSidebarTitle = ({ children }) => {
+	return (
+		<div
+			sx={{
+				textAlign: 'left',
+				paddingTop: '20%'
+			}}
+		>
+			{children}
+		</div>
+	);
+};
+
 export const ThemeButton = (props) => {
 	const [ colorMode, setColorMode ] = useColorMode();
 	return (
-		<header>
+		<header sx={{ marginTop: '6' }}>
 			<div style={{ display: 'flex', justifyContent: 'space-between', width: '200px', margin: 'auto' }}>
 				<FiSun
 					sx={{ opacity: colorMode === 'light' ? '1' : '0.5' }}
@@ -243,7 +268,33 @@ export const ThemeButton = (props) => {
 	);
 };
 
-export const Divider = (props) => <hr sx={{ display: [ 'block', 'block', 'none' ] }} />;
+export const StyledButtonLink = ({ children, ...props }) => {
+	return (
+		<UnStyledLink
+			sx={{
+				textDecoration: 'none!important',
+				padding: 3,
+				backgroundColor: 'background',
+				color: 'text',
+				boxShadow: (theme) => `0 0 4px ${theme.colors.text}`,
+				border: (theme) => `1px solid ${theme.colors.text}`,
+				borderRadius: 2,
+				fontFamily: 'title',
+				letterSpacing: '1px',
+				textAlign: 'center',
+				cursor: 'pointer',
+				margin: '1rem',
+				fontSize: 3,
+				fontVariant: 'all-small-caps'
+			}}
+			{...props}
+		>
+			{children}
+		</UnStyledLink>
+	);
+};
+
+export const Divider = (props) => <hr sx={{ display: [ 'block', 'block', 'none' ], color: 'text' }} />;
 
 export const BookTitle = (props) => (
 	<h1

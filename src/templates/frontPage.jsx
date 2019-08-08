@@ -19,7 +19,7 @@ const FrontPage = ({ data, ...rest }) => {
 	const chapters = book.chapters;
 
 	return (
-		<Layout>
+		<Layout book={book}>
 			<TableOfContent>
 				{topPages.map((page) => (
 					<Section key={page.id}>
@@ -63,6 +63,8 @@ export const pageQuery = graphql`
 		book(slug: { eq: $slug }) {
 			id
 			name
+			subtitle
+			author
 			path
 			slug
 			pages {

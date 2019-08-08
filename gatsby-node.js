@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const { createFilePath } = require('gatsby-source-filesystem');
 const _ = require('lodash');
 const uuid = require('uuid');
-
+const visit = require('unist-util-visit');
 Object.defineProperty(Array.prototype, 'flat', {
 	value: function(depth = 1) {
 		return this.reduce(function(flat, toFlatten) {
@@ -16,11 +16,28 @@ const defaultOptions = {
 	books: [
 		{
 			name: 'Machine Learning',
-			index: true
+			subtitle: 'Teaching Machines to think like humans',
+			author: 'primerlabs'
 		},
 		{
 			name: 'Logistic Regression',
-			index: true
+			subtitle: 'Teaching Machines to think like humans',
+			author: 'primerlabs'
+		},
+		{
+			name: 'A Tale of Two Cities',
+			subtitle: 'A Story of the French Revolution',
+			author: 'Charles Dickens'
+		},
+		{
+			name: 'The Communist Manisfesto',
+			subtitle: 'Teaching Machines to think like humans',
+			author: 'primerlabs'
+		},
+		{
+			name: "A Mathematician's Apology",
+			subtitle: 'Into the mind of a working mathematician',
+			author: 'G.H.Hardy'
 		}
 	],
 	autoGenerate: true
@@ -85,6 +102,7 @@ exports.createSchemaCustomization = ({ actions }) => {
 		pages: [SoloPage]
 		cards: [Card]
 		getTableOfContent: [Content]
+		questions: [Question]
 	}
 
 	type SoloPage implements Node {
@@ -111,6 +129,7 @@ exports.createSchemaCustomization = ({ actions }) => {
 		cards: [Card]
 		modals: [Modal]
 		body: String!
+		questions: [Question]
 		colNumber: Int
 	}
 
@@ -124,8 +143,8 @@ exports.createSchemaCustomization = ({ actions }) => {
 		chapter: Chapter
 		book: Book
 		body: String!
-		colNumber: Int		
-		
+		questions: [Question]
+		colNumber: Int
 	}
 
 	type Card implements Node {
@@ -145,7 +164,21 @@ exports.createSchemaCustomization = ({ actions }) => {
 		chapter: Chapter
 		body: String!
 	}
-  
+
+	type Question implements Node {
+		id: ID!
+		bookSlug: String
+		chapterNumber: Int
+		number: Int
+		topicNumber: Int
+		body: String
+		title: String
+		path: String
+		chapter: Chapter
+		topic: Topic
+		book: Book
+	}
+   
 	type Mdx implements Node @infer {
 	  frontmatter: MdxFrontmatter
 	}
@@ -167,7 +200,92 @@ exports.createSchemaCustomization = ({ actions }) => {
 
 exports.createResolvers = ({ createResolvers, schema }) => {
 	createResolvers({
+		Question: {
+			path: {
+				type: `String`,
+				resolve(source, args, context, info) {
+					const indexBooks = context.nodeModel
+						.getAllNodes({ type: `Book` })
+						.filter((book) => book.index === true).length;
+					const book = context.nodeModel
+						.getAllNodes({ type: `Book` })
+						.find((book) => book.slug === source.bookSlug);
+
+					const bookPath = indexBooks > 1 ? `${book.slug}/` : book.index === true ? '/' : `${book.slug}/`;
+					const path = `/${bookPath}questions/${source.chapterNumber}/${source.topicNumber}/${slugify(
+						source.title
+					)}/`;
+					return path;
+				}
+			},
+			body: {
+				type: 'String!',
+				resolve(source, args, context, info) {
+					const type = info.schema.getType(`Mdx`);
+					const mdxNode = context.nodeModel.getNodeById({
+						id: source.parent
+					});
+					const resolver = type.getFields()['body'].resolve;
+					return resolver(mdxNode, {}, context, {
+						fieldName: 'body'
+					});
+				}
+			},
+			chapter: {
+				type: `Chapter`,
+				resolve(source, args, context, info) {
+					const chapter = context.nodeModel
+						.getAllNodes({ type: 'Chapter' })
+						.find(
+							(chapter) => chapter.number === source.chapterNumber && chapter.bookSlug === source.bookSlug
+						);
+					return chapter;
+				}
+			},
+			topic: {
+				type: `Topic`,
+				resolve(source, args, context, info) {
+					const chapter = context.nodeModel
+						.getAllNodes({ type: 'Chapter' })
+						.find(
+							(chapter) =>
+								parseInt(chapter.number) === parseInt(source.chapterNumber) &&
+								chapter.bookSlug === source.bookSlug
+						);
+					const topic = context.nodeModel.getAllNodes({ type: 'Topic' }).find((topic) => {
+						return (
+							topic.bookSlug === chapter.bookSlug &&
+							parseInt(topic.number) === parseInt(source.topicNumber)
+						);
+					});
+
+					return topic;
+				}
+			},
+			book: {
+				type: `Book`,
+				resolve(source, args, context, info) {
+					const book = context.nodeModel
+						.getAllNodes({ type: 'Book' })
+						.find((book) => book.slug === source.bookSlug);
+					return book;
+				}
+			}
+		},
 		Chapter: {
+			questions: {
+				type: `[Question]`,
+				resolve(source, args, context, info) {
+					const questions = context.nodeModel
+						.getAllNodes({ type: `Question` })
+						.filter(
+							(question) =>
+								question.chapterNumber === source.number && question.bookSlug === source.bookSlug
+						)
+						.sort((a, b) => a.number - b.number);
+					return questions;
+				}
+			},
 			book: {
 				type: `Book`,
 				resolve(source, args, context, info) {
@@ -228,6 +346,16 @@ exports.createResolvers = ({ createResolvers, schema }) => {
 		},
 
 		Book: {
+			questions: {
+				type: `[Question]`,
+				resolve(source, args, context, info) {
+					const questions = context.nodeModel
+						.getAllNodes({ type: `Question` })
+						.filter((question) => question.bookSlug === source.slug)
+						.sort((a, b) => a.number - b.number);
+					return questions;
+				}
+			},
 			getTableOfContent: {
 				type: `[Content]`,
 				resolve(source, args, context, info) {
@@ -343,6 +471,20 @@ exports.createResolvers = ({ createResolvers, schema }) => {
 			}
 		},
 		Topic: {
+			questions: {
+				type: `[Question]`,
+				resolve(source, args, context, info) {
+					const questions = context.nodeModel
+						.getAllNodes({ type: `Question` })
+						.filter(
+							(question) =>
+								question.bookSlug === source.bookSlug &&
+								parseInt(question.topicNumber) === parseInt(source.number)
+						)
+						.sort((a, b) => a.number - b.number);
+					return questions;
+				}
+			},
 			chapter: {
 				type: `Chapter`,
 				resolve(source, args, context, info) {
@@ -393,6 +535,21 @@ exports.createResolvers = ({ createResolvers, schema }) => {
 						.getAllNodes({ type: 'Book' })
 						.find((book) => book.slug === source.bookSlug);
 					return book;
+				}
+			},
+			excerpt: {
+				type: 'String!',
+				resolve: async (source, args, context, info) => {
+					const type = info.schema.getType(`Mdx`);
+					const mdxNode = context.nodeModel.getNodeById({
+						id: source.parent
+					});
+					const resolver = type.getFields()['excerpt'].resolve;
+					const excerpt = await resolver(mdxNode, { pruneLength: 140 }, context, {
+						fieldName: 'excerpt'
+					});
+
+					return excerpt;
 				}
 			}
 		},
@@ -515,6 +672,8 @@ exports.sourceNodes = ({ actions, createNodeId, reporter, createContentDigest },
 			name: book.name,
 			slug: slugify(book.name),
 			index: book.index ? book.index : false,
+			subtitle: book.subtitle || '',
+			author: book.author || '',
 			type: 'Book'
 		};
 
@@ -657,6 +816,37 @@ exports.onCreateNode = ({ node, actions, getNode, reporter, createNodeId, create
 
 				createParentChildLink({ parent: parent, child: node });
 				reporter.info(`Created Modal Node`);
+			} else if (details.type === QUESTION_PAGE) {
+				//
+				// CREATE QUESTION PAGE NODE
+				//
+				const { frontmatter } = node;
+				const parent = getNode(node.parent);
+				const fieldData = {
+					bookSlug: books.find((elem) => elem.slug === details.book).slug,
+					chapterNumber: details.chapterNumber,
+					number: details.questionNumber,
+					title: frontmatter.title,
+					topicNumber: frontmatter.topicNumber || 1
+				};
+
+				createNode({
+					...fieldData,
+					// Required fields.
+					id: createNodeId(`${node.id} >>> Question`),
+					parent: node.id,
+					children: [],
+					internal: {
+						type: `Question`,
+						contentDigest: createContentDigest(fieldData),
+						content: JSON.stringify(fieldData),
+						description: `Question Page`
+					}
+				});
+
+				createParentChildLink({ parent: parent, child: node });
+				reporter.info(`Created Question  Node`);
+				console.log('QUESTION NODE CREATED');
 			} else if (details.type === CARD_PAGE) {
 				//
 				// CREATE CARD PAGE NODE
@@ -733,7 +923,8 @@ const TOPIC_PAGE = 'TOPIC_PAGE';
 const CHAPTER_PAGE = 'CHAPTER_PAGE';
 const CARD_PAGE = 'CARD_PAGE';
 const MODAL_PAGE = 'MODAL_PAGE';
-const PAGE_ARRAY = [ SOLO_PAGE, TOPIC_PAGE, CHAPTER_PAGE, CARD_PAGE, MODAL_PAGE ];
+const QUESTION_PAGE = 'QUESTION_PAGE';
+const PAGE_ARRAY = [ SOLO_PAGE, TOPIC_PAGE, CHAPTER_PAGE, CARD_PAGE, MODAL_PAGE, QUESTION_PAGE ];
 
 //
 // ─── GET PAGE DETAIL ────────────────────────────────────────────────────────────
@@ -756,6 +947,8 @@ const getPageDetail = (node, bookSlugs) => {
 					relPath: [book-slug/chapter-1/cards/card1.mdx]
 				5. Modal
 					relPath: [book-slug/chapter-1/modals/modal1.mdx]
+				6. Question
+					relPath: [book-slug/chapter-1/questions/question1.mdx]
 		
 		*/
 
@@ -818,6 +1011,17 @@ const getPageDetail = (node, bookSlugs) => {
 					chapterNumber: pathArray[1].match(/^chapter-(\d+)(-.+)?$/)[1],
 					modalNumber: pathArray[3].match(/^card(\d+)(.+)?(.mdx?)$/)[1]
 				};
+			} else if (
+				pathArray[1].match(/^chapter-(\d+)(-.+)?$/) !== null &&
+				pathArray[2] === 'questions' &&
+				pathArray[3].match(/^question(\d+)(.+)?(.mdx?)$/) !== null
+			) {
+				return {
+					type: QUESTION_PAGE,
+					book: pathArray[0],
+					chapterNumber: pathArray[1].match(/^chapter-(\d+)(-.+)?$/)[1],
+					questionNumber: pathArray[3].match(/^question(\d+)(.+)?(.mdx?)$/)[1]
+				};
 			} else {
 				return { type: PAGE };
 			}
@@ -875,10 +1079,16 @@ exports.createPages = async ({ actions, graphql, reporter }, options) => {
 					  slug
 					  name
 					  index
-					pages {
-					  id
-					  title
-					  slug
+						pages {
+						id
+						title
+						slug
+						path
+						}
+					questions {
+						id
+						title
+						path
 					}
 					chapters {
 					  id
@@ -923,9 +1133,18 @@ exports.createPages = async ({ actions, graphql, reporter }, options) => {
 		// Create Solo Page
 		book.node.pages.forEach((page) => {
 			actions.createPage({
-				path: `${bookSlug}${page.slug}`,
+				path: `${page.path}`,
 				component: require.resolve('./src/templates/soloPage.jsx'),
 				context: { id: page.id }
+			});
+		});
+
+		// Create Questions Page
+		book.node.questions.forEach((question) => {
+			actions.createPage({
+				path: `${question.path}`,
+				component: require.resolve('./src/templates/questionPage.jsx'),
+				context: { id: question.id }
 			});
 		});
 	});

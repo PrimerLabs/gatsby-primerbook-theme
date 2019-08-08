@@ -1,6 +1,6 @@
 export const theme = {
 	breakpoints: [ '48em', '64em', '120em' ],
-	space: [ 0, 4, 8, 16, 20, 32, 60 ],
+	space: [ 0, 4, 8, 16, 20, 32, 60, 100, 200 ],
 	fonts: {
 		body: 'Quicksand; sans-serif',
 		title: 'Open Sans; sans-serif',
@@ -115,6 +115,21 @@ export const theme = {
 			'&:visited, &:hover, &:link': {
 				color: 'primary'
 			}
+		},
+
+		hr: {
+			height: '0',
+			margin: '3em 0',
+			border: '0',
+			borderTop: '0.1rem solid'
+		},
+
+		blockquote: {
+			fontStyle: 'italic',
+			margin: '1em 0 0 0',
+			padding: '0 0 0 1em',
+			borderLeft: '0.2rem solid',
+			borderColor: 'text'
 		}
 	}
 };

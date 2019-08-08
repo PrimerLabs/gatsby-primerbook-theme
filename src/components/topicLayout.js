@@ -15,13 +15,11 @@ import {
 	IconButton,
 	Container,
 	SidebarLink,
-	ChapterNumber
+	ChapterNumber,
+	StyledButtonLink,
+	TopicSidebarTitle
 } from './styles/styles';
 import { FiMenu, FiX } from 'react-icons/fi';
-const SidebarLinkStyle = {
-	textDecoration: 'underline',
-	fontFamily: 'Crimson Text ; serif'
-};
 
 const TopicLayout = ({
 	children,
@@ -33,6 +31,7 @@ const TopicLayout = ({
 	solo,
 	colNumber,
 	next,
+	prev,
 	...rest
 }) => {
 	const [ open, handleOpen ] = useState(true);
@@ -59,16 +58,12 @@ const TopicLayout = ({
 							<Sidebar visible={open}>
 								{
 									<React.Fragment>
-										<Link to={bookPath} style={SidebarLinkStyle}>
+										<Link to={bookPath} style={{ paddingTop: '10%' }}>
 											Back to Home
 										</Link>
-										<div
-											style={{
-												textAlign: 'left'
-											}}
-										>
+										<TopicSidebarTitle>
 											<ChapterTitle>{chapterTitle}</ChapterTitle>
-										</div>
+										</TopicSidebarTitle>
 										{next !== null ? next.type === 'CHAPTER_PAGE' ? (
 											<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
 										) : (
@@ -82,13 +77,23 @@ const TopicLayout = ({
 							<Divider />
 							<Container expand={!open}>
 								{children}
-								{next !== null ? next.type === 'CHAPTER_PAGE' ? (
-									<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
-								) : (
-									<SidebarLink to={next.path}>Next : {next.title}</SidebarLink>
-								) : (
-									<p />
-								)}
+								<Divider />
+								<div style={{ display: 'flex', justifyContent: 'space-around' }}>
+									{prev !== null ? prev.type === 'CHAPTER_PAGE' ? (
+										<StyledButtonLink to={prev.path}>Prev</StyledButtonLink>
+									) : (
+										<StyledButtonLink to={prev.path}>Prev</StyledButtonLink>
+									) : (
+										<p />
+									)}
+									{next !== null ? next.type === 'CHAPTER_PAGE' ? (
+										<StyledButtonLink to={next.path}>Next</StyledButtonLink>
+									) : (
+										<StyledButtonLink to={next.path}>Next</StyledButtonLink>
+									) : (
+										<p />
+									)}
+								</div>
 							</Container>
 						</Main>
 					</IconContext.Provider>
@@ -117,14 +122,10 @@ const TopicLayout = ({
 						<Sidebar visible={open}>
 							{
 								<React.Fragment>
-									<Link to={bookPath} style={SidebarLinkStyle}>
+									<Link to={bookPath} style={{ paddingTop: '10%' }}>
 										Back to Home
 									</Link>
-									<div
-										style={{
-											textAlign: 'left'
-										}}
-									>
+									<TopicSidebarTitle>
 										<ChapterNumber>
 											<Link style={{ textDecoration: 'none' }} to={chapterPath}>
 												Chapter {chapterNumber}
@@ -141,7 +142,7 @@ const TopicLayout = ({
 												/>
 											))}
 										</SidebarTopicList>
-									</div>
+									</TopicSidebarTitle>
 									{next !== null ? next.type === 'CHAPTER_PAGE' ? (
 										<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
 									) : (
@@ -155,13 +156,23 @@ const TopicLayout = ({
 						<Divider />
 						<Container expand={!open}>
 							{children}
-							{next !== null ? next.type === 'CHAPTER_PAGE' ? (
-								<SidebarLink to={next.path}>Next Chapter : {next.title}</SidebarLink>
-							) : (
-								<SidebarLink to={next.path}>Next : {next.title}</SidebarLink>
-							) : (
-								<p />
-							)}
+							<Divider />
+							<div style={{ display: 'flex', justifyContent: 'space-around' }}>
+								{prev !== null ? prev.type === 'CHAPTER_PAGE' ? (
+									<StyledButtonLink to={prev.path}>Prev</StyledButtonLink>
+								) : (
+									<StyledButtonLink to={prev.path}>Prev</StyledButtonLink>
+								) : (
+									<p />
+								)}
+								{next !== null ? next.type === 'CHAPTER_PAGE' ? (
+									<StyledButtonLink to={next.path}>Next</StyledButtonLink>
+								) : (
+									<StyledButtonLink to={next.path}>Next</StyledButtonLink>
+								) : (
+									<p />
+								)}
+							</div>
 						</Container>
 					</Main>
 				</IconContext.Provider>

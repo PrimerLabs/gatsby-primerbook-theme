@@ -61,7 +61,14 @@ module.exports = {
 						}
 					}
 				],
+				plugins: [ `gatsby-remark-images` ],
 				remarkPlugins: [ require('remark-math'), require('remark-html-katex') ]
+			}
+		},
+		{
+			resolve: `gatsby-source-filesystem`,
+			options: {
+				path: `${__dirname}/${options.contentPath}/images`
 			}
 		},
 

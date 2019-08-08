@@ -12,9 +12,16 @@ const SoloPage = ({ data }) => {
 		currentIndex !== -1
 			? currentIndex + 1 < tableOfContent.length ? data.soloPage.book.getTableOfContent[currentIndex + 1] : null
 			: null;
-
+	const prevIndex = currentIndex !== 0 ? data.soloPage.book.getTableOfContent[currentIndex - 1] : null;
+	console.log(data);
 	return (
-		<TopicLayout solo next={nextIndex} chapterTitle={data.soloPage.title} bookPath={data.soloPage.book.path}>
+		<TopicLayout
+			solo
+			next={nextIndex}
+			prev={prevIndex}
+			chapterTitle={data.soloPage.title}
+			bookPath={data.soloPage.book.path}
+		>
 			<Content>
 				<MDXRenderer>{data.soloPage.body}</MDXRenderer>
 			</Content>

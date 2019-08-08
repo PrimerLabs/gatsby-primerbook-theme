@@ -1,24 +1,29 @@
 import React from 'react';
 import { Layout as ThemeLayout, Main } from 'theme-ui';
-import { Sidebar, BookTitle, BookSubTitle, Container, BookAuthor, Divider, ThemeButton } from './styles/styles';
+import {
+	Sidebar,
+	BookTitle,
+	BookSubTitle,
+	Container,
+	BookAuthor,
+	Divider,
+	ThemeButton,
+	MainTitle
+} from './styles/styles';
 import { ModalProvider } from './Modal/Modal';
 // import Sidebar from './sidebar';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, book }) => {
 	return (
 		<ThemeLayout>
 			<ModalProvider>
 				<Main>
 					<Sidebar visible={true}>
-						<div
-							style={{
-								textAlign: 'right'
-							}}
-						>
-							<BookTitle>MACHINE LEARNING & REGRESSION</BookTitle>
-							<BookSubTitle> Teaching machines to think like humans </BookSubTitle>
-							<BookAuthor>Primerlabs</BookAuthor>
-						</div>
+						<MainTitle>
+							<BookTitle>{book.name}</BookTitle>
+							<BookSubTitle>{book.subtitle}</BookSubTitle>
+							<BookAuthor>{book.author}</BookAuthor>
+						</MainTitle>
 						<ThemeButton />
 					</Sidebar>
 					<Divider />

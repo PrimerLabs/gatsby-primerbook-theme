@@ -6,13 +6,14 @@ import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { Section, TableOfContent, TableOfContentSectionList, Content } from '../components/styles/styles';
 
 const ChapterPage = ({ data }) => {
+	console.log(data);
 	const tableOfContent = data.chapter.book.getTableOfContent;
 	const currentIndex = tableOfContent.findIndex((node) => node.id === data.chapter.id);
 	const nextIndex =
 		currentIndex !== -1
 			? currentIndex + 1 < tableOfContent.length ? data.chapter.book.getTableOfContent[currentIndex + 1] : null
 			: null;
-	console.log(nextIndex);
+	const prevIndex = currentIndex !== 0 ? data.chapter.book.getTableOfContent[currentIndex - 1] : null;
 	return (
 		<TopicLayout
 			topics={data.chapter.topics}
@@ -22,6 +23,7 @@ const ChapterPage = ({ data }) => {
 			bookPath={data.chapter.book.path}
 			colNumber={data.chapter.colNumber}
 			next={nextIndex}
+			prev={prevIndex}
 		>
 			<Content>
 				<h1>{data.chapter.title}</h1>
